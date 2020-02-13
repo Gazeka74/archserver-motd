@@ -1,0 +1,18 @@
+cat <<EOF
+------------------------------------------------------------------
+${c0}       .
+${c0}      /#\\
+${c0}     /###\\     ${white}               #     ${blue}| *
+${c0}    /p^###\\    ${white} a##e #%" a#"e 6##%  ${blue}| | |-^-. |   | \\ /
+${c0}   /##P^q##\\   ${white}.oOo# #   #    #  #  ${blue}| | |   | |   |  X
+${c0}  /##(   )##\\  ${white}%OoO# #   %#e" #  #  ${blue}| | |   | ^._.| / \\ TM
+${c0} /###P   q#,^\\
+${c0}/P^         ^q\\ 
+-------------------------------------------------------------------
+${nc}${USER}${ic}@${nc}${host}${reset}
+${lc}KERNEL:	${ic}${kernel}${reset}
+${lc}UPTIME:	${ic}${uptime}${reset} 
+${lc}PACKAGES:	${ic}${packages}${reset}
+${lc}UPDATES:	${ic}${bold}${white}${updates}${reset}
+${lc}BANNED/	SDKFHSDKLHFH
+EOF
