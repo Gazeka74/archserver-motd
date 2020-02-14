@@ -61,7 +61,7 @@ if [ -x "$(command -v tput)" ]; then
 	reset="$(tput sgr0)"
 fi
 
-beg="${c1}-> ${c0}"			# in front of information
+beg="${c1} ${c0}"			# in front of information
 c0="${reset}${blue}${bold}"		# logo + text 1 color
 c1="${reset}${white}${bold}"		# text 2 color
 upd_color=""				# updates based on amount
@@ -142,19 +142,18 @@ ${c0}             \`/++++/+++++++:		${beg}KERNEL:	${c1}${kernel}
 ${c0}            \`/++++++++++++++:		${beg}UPTIME:	${c1}${uptime}
 ${c0}           \`/+++ooooooooooooo/\`		${beg}PACKAGES:	${upd_color}${updates}
 ${c0}          ./ooosssso++osssssso+\`	${beg}BANNED:	${c1}${banned}
-${c0}         .oossssso-\`\`\`\`/ossssss+\`	${beg}void:
-${c0}        -osssssso.      :ssssssso.		--> 
-${c0}       :osssssss/        osssso+++.		--> 	
+${c0}         .oossssso-\`\`\`\`/ossssss+\`	
+${c0}        -osssssso.      :ssssssso.		 
+${c0}       :osssssss/        osssso+++.	 	
 ${c0}      /ossssssss/        +ssssooo/-
 ${c0}    \`/ossssso+/:-        -:/+osssso+-
 ${c0}   \`+sso+:-\`                 \`.-/+oso:
 ${c0}  \`++:.                           \`-/+/
 ${c0}  .\`                                 \`/
 ${white}${bold}--------------------------------------------------------------------------------
-FILESYSTEMS :			SIZE	AVAIL	USED	
-$data_m	${sda2}		$data_s	$data_a	$data_pcent	${sda2}
-${sdb7}
-${sdb5}
+FILESYSTEM	TOTAL	AVAIL	USED	
+$data_m	$data_s	$data_a	$data_pcent	${sda2}
+$root_m		$root_s	$root_a	$root_pcent	${sdb7}
+$boot_m		$boot_s	$boot_a	$boot_pcent	${sdb5}
 EOF
-
 
