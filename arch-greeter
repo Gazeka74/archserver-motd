@@ -24,8 +24,10 @@ packages="$(pacman -Q | wc -l)"
 # Numbers of updates pending
 updates_count="$(checkupdates | wc -l)"
 
-# Numbers of IP banned
-banned="null IP banned"		#FIXME
+# Numbers of IP bannedi
+
+f2b="$(sudo fail2ban-client status sshd | grep 'Currently banned' | rev | cut -f 1 | rev)"
+banned="$f2b IP banned"		
 
 # Text to be displayed
 if (( $updates_count > 0 )); then
@@ -38,16 +40,24 @@ fi
 # Number of '-' to be displayed on the filesystem occupation
 number=30
 
-#/mnt/DATA
-read data_a data_s data_m data_pcent<<< "$(df -h --output=avail,size,target,pcent /dev/sda2 | tail -1)" 
+# /mnt/INT1
+read int1_a int1_s int1_m int1_pcent<<< "$(df -h --output=avail,size,target,pcent /dev/sda2 | tail -1)" 
 
-#/
+# /
 read root_a root_s root_m root_pcent<<< "$(df -h --output=avail,size,target,pcent /dev/sdb7 | tail -1)"
 
-#/boot
+# /boot
 read boot_a boot_s boot_m boot_pcent<<< "$(df -h --output=avail,size,target,pcent /dev/sdb5 | tail -1)"
 
-# Colors
+# /mnt/EXT1
+read ext1_a ext1_s ext1_m ext1_pcent <<< "$(df -h --output=avail,size,target,pcent /dev/sdc1 | tail -1)"
+
+# /mnt/EXT2
+read ext2_a ext2_s ext2_m ext2_pcent <<< "$(df -h --output=avail,size,target,pcent /dev/sdd1 | tail -1)"
+
+
+
+## Colors
 if [ -x "$(command -v tput)" ]; then
 	bold="$(tput bold)"
 	black="$(tput setaf 0)"
@@ -111,9 +121,12 @@ trace_fs () {
 	echo $str
 }
 
-sda2=$(trace_fs $data_m $data_a $data_s $data_pcent $number)
+sda2=$(trace_fs $int1_m $int1_a $int1_s $int1_pcent $number)
 sdb7=$(trace_fs $root_m $root_a $root_s $root_pcent $number)
 sdb5=$(trace_fs $boot_m $boot_a $boot_s $boot_pcent $number)
+sdc1=$(trace_fs $ext1_m $ext1_a $ext1_s $ext1_pcent $number)
+sdd1=$(trace_fs $ext2_m $ext2_a $ext2_s $ext2_pcent $number)
+
 
 #########################################
 #
@@ -132,19 +145,19 @@ fi
 
 cat <<EOF
 ${c0}                    -\`
-${c0}                   .o+\`			${white}               #     ${blue}| *
-${c0}                  \`ooo/			${white} a##e #%" a#"e 6##%  ${blue}| | |-^-. |   | \\ /
-${c0}                 \`+oooo:		${white}.oOo# #   #    #  #  ${blue}| | |   | |   |  X
-${c0}                \`+oooooo:		${white}%OoO# #   %#e" #  #  ${blue}| | |   | ^._.| / \\ TM
-${c0}                -+oooooo+:		${white}----------------------------------------
-${c0}             \`/:-:++oooo+:		${beg}${USER}${reset}@${c0}${host}
-${c0}             \`/++++/+++++++:		${beg}KERNEL:	${c1}${kernel} 	
-${c0}            \`/++++++++++++++:		${beg}UPTIME:	${c1}${uptime}
-${c0}           \`/+++ooooooooooooo/\`		${beg}PACKAGES:	${upd_color}${updates}
-${c0}          ./ooosssso++osssssso+\`	${beg}BANNED:	${c1}${banned}
-${c0}         .oossssso-\`\`\`\`/ossssss+\`	
-${c0}        -osssssso.      :ssssssso.		 
-${c0}       :osssssss/        osssso+++.	 	
+${c0}                   .o+\`			
+${c0}                  \`ooo/			
+${c0}                 \`+oooo:		${white}               #     ${blue}| *
+${c0}                \`+oooooo:		${white} a##e #%" a#"e 6##%  ${blue}| | |-^-. |   | \\ /
+${c0}                -+oooooo+:		${white}.oOo# #   #    #  #  ${blue}| | |   | |   |  X
+${c0}             \`/:-:++oooo+:		${white}%OoO# #   %#e" #  #  ${blue}| | |   | ^._.| / \\ TM	
+${c0}             \`/++++/+++++++:		${white}----------------------------------------	 	
+${c0}            \`/++++++++++++++:		${beg}${USER}${reset}@${c0}${host}	
+${c0}           \`/+++ooooooooooooo/\`		${beg}KERNEL:	${c1}${kernel}	
+${c0}          ./ooosssso++osssssso+\`	${beg}UPTIME:	${c1}${uptime}
+${c0}         .oossssso-\`\`\`\`/ossssss+\`	${beg}PACKAGES:	${c1}${packages}
+${c0}        -osssssso.      :ssssssso.	${beg}UPDATES:	${upd_color}${updates}
+${c0}       :osssssss/        osssso+++.	${beg}BANNED:	${c1}${banned}	 	
 ${c0}      /ossssssss/        +ssssooo/-
 ${c0}    \`/ossssso+/:-        -:/+osssso+-
 ${c0}   \`+sso+:-\`                 \`.-/+oso:
@@ -152,8 +165,10 @@ ${c0}  \`++:.                           \`-/+/
 ${c0}  .\`                                 \`/
 ${white}${bold}--------------------------------------------------------------------------------
 FILESYSTEM	TOTAL	AVAIL	USED	
-$data_m	$data_s	$data_a	$data_pcent	${sda2}
 $root_m		$root_s	$root_a	$root_pcent	${sdb7}
 $boot_m		$boot_s	$boot_a	$boot_pcent	${sdb5}
+$int1_m	$int1_s	$int1_a	$int1_pcent	${sda2}
+$ext1_m	$ext1_s	$ext1_a	$ext1_pcent	${sdc1}
+$ext2_m	$ext2_s	$ext2_a	$ext2_pcent	${sdd1}
+${white}${bold}--------------------------------------------------------------------------------
 EOF
-
